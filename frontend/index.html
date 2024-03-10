@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket Example</title>
+  <script src="https://cdn.socket.io/4.7.4/socket.io.min.js" integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
+</head>
+<div id='chat-box'></div>
+<input id='chat-input'/>
+<button id='send-button'>메시지 보내기</button>
+<body>
+  <script>
+    const socket = io('ws://localhost:3000');
+    socket.on('connect', () => {
+      console.log('Server에 연결 성공!');
+    });
+
+
+    document.getElementById('send-button').addEventListener('click', () => {
+      const input = document.getElementById('chat-input');
+      socket.emit('send-message', {
+        message: input.value
+      });
+    });
+
+    socket.on('chat-message', (data) => {
+      console.log('Server로부터 메시지 수신: ', data);
+      const chatBox = document.getElementById('chat-box');
+      chatBox.innerHTML += `<p>${data.message}</p>`;
+    });
+  </script>
+</body>
+</html>
